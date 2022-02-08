@@ -1,20 +1,20 @@
 {
-  "name": "signalk-raspberry-pi-ina219",
-  "author": "Jean-David Caprace",
+  "name": "signalk-raspberry-pi-ina219hat",
+  "author": "Brian Scally",
   "description": "SignalK node server plugin that reads data from ina219 current/voltage/power sensors on Raspberry-Pi",
   "license": "MIT",
-  "homepage": "https://github.com/jdcaprace/signalk-raspberry-pi-ina219#readme",
-  "version": "0.0.13",
+  "homepage": "https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat#readme",
+  "version": "0.0.3",
   "main": "index.js",
   "keywords": [
     "signalk-node-server-plugin"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jdcaprace/signalk-raspberry-pi-ina219.git"
+    "url": "git+https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat.git"
   },
   "bugs": {
-    "url": "https://github.com/jdcaprace/signalk-raspberry-pi-ina219/issues"
+    "url": "https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat/issues"
   },
   "dependencies": {
     "ina219-async": "1.0.2"
