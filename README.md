@@ -53,7 +53,7 @@ Do this in and ESD safe environment.
 
 ![alt text](https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat/blob/master/Pictures/20220208_141021.jpg)
 
-This involvers soldering irons... molten metal.. if this scares you STOP.  This project is not for you.
+This involvers soldering irons... molten metal.. and nast vapours..  if this scares you STOP.  This project is not for you.
 Also this very ikely removes any warrently or support that might have possible come from the vendors.
 
 For unused channels I suggest that you short the 3 inputs together with a short lenght of wire.
