@@ -8,6 +8,7 @@
   "main": "index.js",
   "keywords": [
     "signalk-node-server-plugin"
+    "signalk-category-hardware"
   ],
   "repository": {
     "type": "git",
