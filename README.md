@@ -5,6 +5,16 @@ ina219 current shunt and power monitor sensor information for SignalK (SK).
 _If you are uncomfortable with a soldering iron this project might not be for you._
 
 By default these boards are set up for reporting current between [-3.2 A to 3.2 A], Voltage [0-26 VDC], and Power.
+This is great for small systems, but the imputus for this project was identifying the level of individual consumers such as my fridge and heatpump.
+This has allowed a better understanding of battery sizing and energy use decisions.
+
+It is adaptable to other circuit monitoring - for example I have used it to generate a power profile for my windlass using a 500A shunt.
+
+There are commercially available circuit monitors, but most struggle with - for example - the 35A@12V  load of a DC heat pump or the 60A@24V of a loaded windless.
+
+Sure it is easy enough to get a spot measurement, but a detailed view of dutycycle of and power draw of the multispeed motors is very difficult.
+
+Looking around I found a project from Jean-David Caprace, and combining that with available Pi Hats and some shunts produced the data flow I needed.
 
 This plugin can be downloaded via the SignalK application.
 ## Achnoldgements
@@ -64,11 +74,24 @@ For proper circuit current measurement the shunt should be connected to the high
 
 ![alt text](https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat/blob/master/Pictures/hookup.png)
 
-In order to use the sensor, the i2c bus must be enabled on your rasbperry pi. This can be accomplished using "sudo raspi-config".
-Here is a example of how to do this - https://www.raspberrypi-spy.co.uk/2014/11/enabling-the-i2c-interface-on-the-raspberry-pi/
+The 2 leads from the hot side of the circuit should be routed through inline fueses, I use 1A blade fuses.
+
+Now you can power your Pi and do the configuration.
 
 ### Configuring the Plugin.
 
+In order to use the sensor, the i2c bus must be enabled on your rasbperry pi. This can be accomplished using "sudo raspi-config".
+Here is a example of how to do this - https://www.raspberrypi-spy.co.uk/2014/11/enabling-the-i2c-interface-on-the-raspberry-pi/
+
+In SignalK admin mode install the plugin from the app store.
+
+Now enable the desired channels.
+
+Select the measurement channel system voltage - 12V or 24V.
+
+And configure the shut parameters
+
+And SignalK path to store the data.
 
 ## Troubleshooting
 When you first start SK, you should see one of two things in the /var/log/syslog; ina219 initialization succeeded or ina219 initialization failed along with details of the failure.
