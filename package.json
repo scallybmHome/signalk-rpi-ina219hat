@@ -18,7 +18,6 @@
     "url": "https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat/issues"
   },
   "dependencies": {
-    "ina219-async": "1.0.2"
   },
   "scripts": {
     "test": "echo \"No test specified\""
