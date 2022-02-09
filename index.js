@@ -1,92 +1,121 @@
 /*
- * Copyright 2022 Jean-David Caprace <jd.caprace@gmail.com>
+ * 
+ * Copyright 2022 Brian M Scally <scallybm@gmail.con>
+ * Extension of the work by Jean-David Caprace <jd.caprace@gmail.com>
  *
  * Add the MIT license
  */
 
 const ina219 = require('ina219-async');
+/*
+* We are only use the read and write low level functions.
+*
+*/
+
 
 module.exports = function (app) {
-  let timer = null
-  let plugin = {}
+	let calibrated = false
+	let timer = null
+	let plugin = {}
 
-  plugin.id = 'signalk-raspberry-pi-ina219'
-  plugin.name = 'Raspberry-Pi ina219'
-  plugin.description = 'ina219 i2c current/voltage/power sensor on Raspberry-Pi'
+	plugin.id = 'signalk-raspberry-pi-ina219hat'
+	plugin.name = 'Raspberry-Pi ina219hat'
+	plugin.description = 'ina219 hat i2c current/voltage/power sensor on Raspberry-Pi'
+	plugin.schema = {
+		type: 'object',
+		properties: {
+			rate: {
+				title: "Sample Rate (in seconds)",
+				type: 'number',
+				default: 5
+			},
+			vselect12or24: {
+				type: 'boolean',
+				title: 'Check if the system is 24V',
+				default: false
+			},
+			channel: {
+				type: "array",
+				title: "Channels"
+				items: {
+					type: "object",
+					required: [ 'enable', 'path', 'shuntCurrent', 'shuntVoltage', 'i2cBus', 'i2cAddress'],
+					properties: {
+						enable: {
+							type: 'boolean',
+							title: 'Enable Channel one',
+							default: false
+						},
+						path: {
+							type: 'string',
+							title: 'SignalK Path of voltage',
+							description: 'This is used to build the path in Signal K for the sensor data.  voltage/current/power will be appended',
+							default: 'electrical.batteries.battery01'
+						},
+						shuntCurrent: {
+							type: 'number',
+							title: 'Shunt current rating',
+							default: 50
+						},
+						shuntVoltage: {
+							type: 'number',
+							title: 'Shunt mV at full scale',
+							default: 50
+						},
+						i2cBus: {
+							type: 'integer',
+							title: 'I2C bus number',
+							default: 1,
+						},
+						i2cAddress: {
+							type: 'string',
+							title: 'I2C address',
+							default: '0x40',
+						}
+					}
+				}
+			}
+		}
+	}
 
-  plugin.schema = {
-    type: 'object',
-    properties: {
-      rate: {
-        title: "Sample Rate (in seconds)",
-        type: 'number',
-        default: 5
-      },
-      pathvoltage: {
-        type: 'string',
-        title: 'SignalK Path of voltage',
-        description: 'This is used to build the path in Signal K for the voltage sensor data',
-        default: 'electrical.batteries.battery01.voltage' //Units: V (Volt)
-		    //https://signalk.org/specification/1.5.0/doc/vesselsBranch.html
-      },
-      reportcurrent: {
-        type: 'boolean',
-        title: 'Also send the current data to Signalk',
-        default: true
-      },
-      pathcurrent: {
-        type: 'string',
-        title: 'SignalK Path of current',
-        description: 'This is used to build the path in Signal K for the current sensor data',
-        default: 'electrical.batteries.battery01.current' //Units: A (Ampere)
-		    //https://signalk.org/specification/1.5.0/doc/vesselsBranch.html
-      },
-      i2c_bus: {
-        type: 'integer',
-        title: 'I2C bus number',
-        default: 1,
-      },
-      i2c_address: {
-        type: 'string',
-        title: 'I2C address',
-        default: '0x40',
-      },
-    }
-  }
 
   plugin.start = function (options) {
 
-    function createDeltaMessage (voltage, current) {
-      var values = [
-        {
-          'path': options.pathvoltage,
-          'value': voltage
-        }
-      ];
+    function createDeltaMessage (voltage, current, power) {
+		var values = [
+			{
+			  'path': options.pathall+".voltage",
+			  'value': voltage
+			},
+			{
+			  'path': options.pathall+".current",
+			  'value': current
+			},
+			{
+			  'path': options.pathall+".power",
+			  'value': power
+			}
+		];
     
-    // Report current if desired
-    if (options.reportcurrent == true) {
-      values.push(
-        {
-          'path': options.pathcurrent,
-          'value': current
-        });
-      }
-      
-
       return {
         'context': 'vessels.' + app.selfId,
         'updates': [
-          {
-            'source': {
-              'label': plugin.id
-            },
-            'timestamp': (new Date()).toISOString(),
-            'values': values
-          }
+			{
+				'source': {
+					'label': plugin.id
+				},
+				'timestamp': (new Date()).toISOString(),
+				'values': values
+			}
         ]
       }
     }
+	
+	async function config219() {
+		if ( calibrated == false ){
+			
+		}
+	}
 
     // The ina219 constructor options are optional.
     
@@ -106,18 +135,20 @@ module.exports = function (app) {
       console.log("Shunt voltage (mV): " + shuntvoltage);
       const shuntcurrent = await sensor.getCurrent_mA();
       console.log("Shunt Current (mA): " + shuntcurrent);
+      const shuntpower = await sensor.getPower_mW();
+      console.log("Shunt Power (mW): " + shuntpower);
 
-        //console.log(`data = ${JSON.stringify(data, null, 2)}`);
-		    //console.log(data)
-        
+     
 	// Change units to be compatible with SignalK
 	shuntcurrentA = shuntcurrent / 1000;
 	console.log("Load Current (A): " + shuntcurrentA);
 	loadvoltageV = busvoltage + (shuntvoltage / 1000);
 	console.log("Load voltage (V): " + loadvoltageV);
+	loadpowerW = buspower + (shuntpower / 1000);
+	console.log("Load power (W): " + loadpowwerV);
 	
         // create message
-        var delta = createDeltaMessage(loadvoltageV, shuntcurrentA)
+        var delta = createDeltaMessage(loadvoltageV, shuntcurrentA, loadPowerW)
         
         // send data
         app.handleMessage(plugin.id, delta)		
@@ -144,5 +175,3 @@ module.exports = function (app) {
 
   return plugin
 }
-
-
