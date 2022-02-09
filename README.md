@@ -85,8 +85,6 @@ Here is a example of how to do this - https://www.raspberrypi-spy.co.uk/2014/11/
 
 In SignalK admin mode install the plugin from the app store.
 
-Then at a console install the ina-async plugin. - https://www.npmjs.com/package/ina219-async
-
 Now enable the desired channels.
 
 Select the measurement channel system voltage - 12V or 24V.
