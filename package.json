@@ -14,8 +14,8 @@
     "i2c-bus": "^4.0.11"
   },
   "keywords": [
-    "signalk-category-hardware",
-    "signalk-node-server-plugin"
+    "signalk-node-server-plugin",
+    "signalk-category-hardware"
   ],
   "author": "Brian Scally",
   "license": "MIT",
