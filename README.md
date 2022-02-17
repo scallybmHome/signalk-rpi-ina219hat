@@ -85,13 +85,24 @@ Here is a example of how to do this - https://www.raspberrypi-spy.co.uk/2014/11/
 
 In SignalK admin mode install the plugin from the app store.
 
-Now enable the desired channels.
+Enable the desired channels.
 
-Select the measurement channel system voltage - 12V or 24V.
+And configure the shut parameters.  These will be written on the shunt and be of the form..
+- 100A/50mv
+for this enter 100 and 50, the fields are numeric and do not need the A and mv.
 
-And configure the shut parameters
+If you want to leave the default resistor on and measure low currents the values to enter are 3 and 300.  
 
-And SignalK path to store the data.
+Select the I2C address for that channel, For the available hats this is 0x40 through 0x44,  but I have allowed for all the possible I2C addresses in case someone makes a 16 channel board.
+
+Select the I2C bus.  All the hats connect to I2C-1,  but RPI3 and 4 have several available I2C busses.
+
+Check the box if it is a 24V power circuit.
+
+Enter the measurement frequency - Periods of less than 0.5s can cause system instability due to load.
+
+Now if you want to add another measurement channel you can.
+You can infact add the same measurement channel a second time and you will get a second output of almost the same data.
 
 ## Troubleshooting
 When you first start SK, you should see one of two things in the /var/log/syslog; ina219 initialization succeeded or ina219 initialization failed along with details of the failure.
@@ -99,6 +110,16 @@ When you first start SK, you should see one of two things in the /var/log/syslog
 If the sensor isn't found you can run `ls /dev/*i2c*` which should return `/dev/i2c-1`. If it doesnt return then make sure that the i2c bus is enabled using raspi-config.
 
 You can also download the i2c-tools by running `sudo apt-get install -y i2c-tools`. Once those are installed you can run `i2cdetect -y 1`. You should see the ina219 detected as address 0x77. If the sensor isn't detected then go back and check the sensor wiring.
+
+## A note on Sampling
+
+Sampling is just that .. a way of reducing data.  One hopes that the sample catches reality.  But you should be aware in the ways in which it can fail
+In INA219 takes a snapshot of the voltage and current, at an interval of your choosing.
+This snapshot is taken over 0.068s at a (default) 5s.
+For steady state loads this is fine.  But it might miss - or catch - something like a motor starting.
+For these cases it is better to use a meter with peak ( max and min ) capture.
+Peak capture is not the target for this device.
+![alt text](https://github.com/scallybmHome/signalk-rpi-ina219hat/blob/master/Pictures/sampling.png)
 
 ## Authors
 
