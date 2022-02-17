@@ -150,42 +150,41 @@ module.exports = (address = INA219_ADDRESS, busNumber = 1) => {
                     configurationRegisterValue = INA219_CONFIG_BVOLTAGERANGE_32V;
                 }
                 if ( shuntVoltage < 40 ){
-                    config += INA219_CONFIG_GAIN_1_40MV;
+                    configurationRegisterValue += INA219_CONFIG_GAIN_1_40MV;
                     PGAMask = PGA_MASK_40mv;
                 } else if ( shuntVoltage < 80 ){
                     PGAMask = PGA_MASK_80mv;
-                    config += INA219_CONFIG_GAIN_2_80MV;
+                    configurationRegisterValue += INA219_CONFIG_GAIN_2_80MV;
                 } else if ( shuntVoltage < 160 ){
                     PGAMask = PGA_MASK_160mv;
-                    config += INA219_CONFIG_GAIN_4_160MV;
+                    configurationRegisterValue += INA219_CONFIG_GAIN_4_160MV;
                 } else { //gain of 320
                     PGAMask = PGA_MASK_320mv;
-                    config += INA219_CONFIG_GAIN_8_320MV;
+                    configurationRegisterValue += INA219_CONFIG_GAIN_8_320MV;
                 }
-                config += INA219_CONFIG_BADCRES_12BIT;
-                config += INA219_CONFIG_SADCRES_12BIT_128S_69MS;
-                config += INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
+                configurationRegisterValue += INA219_CONFIG_BADCRES_12BIT;
+                configurationRegisterValue += INA219_CONFIG_SADCRES_12BIT_128S_69MS;
+                configurationRegisterValue += INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS;
                 currentLSB = (shuntCurrent/32768);
                 calibrationRegisterValue= Math.round( 0.04896 / ( (currentLSB)*(shuntVoltage/shuntCurrent) ) )
-          
                 return writeRegister(INA219_REG_CONFIG, configurationRegisterValue)
                 .then(() => {
                     return writeRegister(INA219_REG_CALIBRATION, calibrationRegisterValue);
                 })
                 
-            }
+            })
         },
 
     /**
       *  Gets the conversion ready bit
       */
     getConversionReady: async () => readRegister(INA219_REG_BUSVOLTAGE)
-        .then(value => ((value & INA219_CONVERSION_READY) >> 1),
+        .then(value => ((value & INA219_CONVERSION_READY) >> 1)),
     /**
       *  gets the overflow field
       */
     getMathOverFlow: async () => readRegister(INA219_REG_BUSVOLTAGE)
-      .then(value => value & INA219_MATH_OVERFLOW),
+      .then(value => (value & INA219_MATH_OVERFLOW)),
    /**
       *  Gets the bus voltage in volts
       */
@@ -205,7 +204,7 @@ module.exports = (address = INA219_ADDRESS, busNumber = 1) => {
   	// reset the cal register, meaning CURRENT and POWER will
   	// not be available ... avoid this by always setting a cal
   	// value even if it's an unfortunate extra step
-    getCurrent_mA: async () => writeRegister(INA219_REG_CALIBRATION, calibrationRegisterValue)
+    getCurrent_A: async () => writeRegister(INA219_REG_CALIBRATION, calibrationRegisterValue)
         .then(() => readRegister(INA219_REG_CURRENT))
         .then(value => (value * currentLSB)),
     /**
@@ -215,8 +214,8 @@ module.exports = (address = INA219_ADDRESS, busNumber = 1) => {
   	// reset the cal register, meaning CURRENT and POWER will
   	// not be available ... avoid this by always setting a cal
   	// value even if it's an unfortunate extra step
-    getCurrent_mA: async () => writeRegister(INA219_REG_CALIBRATION, calibrationRegisterValue)
-        .then(() => readRegister(INA219_REG_CURRENT))
+    getPower_W: async () => writeRegister(INA219_REG_CALIBRATION, calibrationRegisterValue)
+        .then(() => readRegister(INA219_REG_POWER))
         .then(value => (value * 20 * currentLSB))
 
   };
