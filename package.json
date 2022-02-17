@@ -1,6 +1,6 @@
 {
   "name": "signalk-rpi-ina219hat",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "SignalK INA219 current monitoring for HATs using user selectable shunts.",
   "main": "index.js",
   "scripts": {
