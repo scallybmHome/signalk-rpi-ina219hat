@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat.git"
+    "url": "git+https://github.com/scallybmHome/signalk-rpi-ina219hat.git"
   },
   "dependencies": {
     "i2c-bus": "^4.0.11"
