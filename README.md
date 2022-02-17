@@ -1,5 +1,5 @@
 
-# signalk-raspberry-pi-ina219hat
+# signalk-rpi-ina219hat
 ina219 current shunt and power monitor sensor information for SignalK (SK).
 
 _If you are uncomfortable with a soldering iron this project might not be for you._
