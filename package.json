@@ -1,25 +1,26 @@
 {
-  "name": "signalk-raspberry-pi-ina219hat",
-  "author": "Brian Scally",
-  "description": "SignalK node server plugin that reads data from ina219 current/voltage/power sensors on Raspberry-Pi",
-  "license": "MIT",
-  "homepage": "https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat#readme",
-  "version": "0.0.3",
+  "name": "signalk-rpi-ina219hat",
+  "version": "0.7.0",
+  "description": "SignalK INA219 current monitoring for HATs using user selectable shunts.",
   "main": "index.js",
-  "keywords": [
-    "signalk-node-server-plugin"
-    "signalk-category-hardware"
-  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat.git"
   },
+  "dependencies": {
+    "i2c-bus": "^4.0.11"
+  },
+  "keywords": [
+    "signalk-category-hardware",
+    "signalk-node-server-plugin"
+  ],
+  "author": "Brian Scally",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat/issues"
   },
-  "dependencies": {
-  },
-  "scripts": {
-    "test": "echo \"No test specified\""
-  }
+  "homepage": "https://github.com/scallybmHome/signalk-raspberry-pi-ina219hat#readme"
 }
